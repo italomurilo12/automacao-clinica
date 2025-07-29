@@ -1,0 +1,55 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+env/
+venv/
+ENV/
+.venv/
+.Python
+
+# VS Code settings
+.vscode/
+.history/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Build output
+dist/
+build/
+out/
+
+# Environment files
+.env
+.env.*
+
+# Misc
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# Ignore coverage reports
+coverage/
+*.lcov
+
+# Ignore generated PDFs
+*.pdf
+
+# Ignore assets cache (if any)
+assets/cache/

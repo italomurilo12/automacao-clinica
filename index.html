@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Plano de Automação para Clínicas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F; /* Deep Navy Blue */
+            color: #E6F1FF; /* Light Blueish White */
+        }
+
+        .container-glow {
+            background-color: #0E2A47;
+            box-shadow: 0 0 25px rgba(100, 255, 218, 0.1), 0 0 45px rgba(100, 255, 218, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .btn-glow {
+            background-color: #64FFDA; /* Mint Green */
+            color: #0A192F;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.4);
+        }
+
+        .btn-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.7);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #64FFDA;
+            border: 1px solid #64FFDA;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+
+        .form-input, .form-select, .form-textarea, .form-radio-label, .form-checkbox-label {
+            background-color: rgba(100, 255, 218, 0.05);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #64FFDA;
+            box-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+        }
+        
+        .form-radio:checked + .form-radio-label,
+        .form-checkbox:checked + .form-checkbox-label {
+             background-color: rgba(100, 255, 218, 0.2);
+             border-color: #64FFDA;
+        }
+
+        .step {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .step.active {
+            display: block;
+            opacity: 1;
+        }
+
+        #loading-spinner {
+            border: 4px solid rgba(100, 255, 218, 0.2);
+            border-left-color: #64FFDA;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Custom styles for generated content */
+        #playbook-content h3 {
+            color: #64FFDA;
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        #playbook-content h4 {
+            color: #CCD6F6;
+            font-size: 1.35rem;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        #playbook-content strong {
+            color: #64FFDA;
+            font-weight: 700;
+        }
+        #playbook-content ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 0.5rem;
+        }
+        #playbook-content li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #a8b2d1;
+        }
+        #playbook-content li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #64FFDA;
+            font-weight: bold;
+        }
+        #playbook-content hr {
+            border-color: rgba(100, 255, 218, 0.2);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        #playbook-content p {
+            color: #a8b2d1;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app-container" class="w-full max-w-3xl mx-auto bg-[#0E2A47] px-8 pt-8 pb-0 rounded-lg container-glow">
+
+        <!-- Header -->
+        <div id="header" class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#E6F1FF] to-[#64FFDA]">Gerador de Plano de Automação</h1>
+            <p class="text-gray-400 mt-2">Responda 5 perguntas e receba um plano de ação para otimizar sua clínica.</p>
+        </div>
+
+        <!-- Form Steps -->
+        <form id="automation-form">
+            <!-- Step 1: Your Name -->
+            <div id="step-1" class="step active">
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 1 de 5</h2>
+                <p class="text-lg mb-4 text-gray-300">Para começar, por favor, nos diga o seu nome.</p>
+                <div class="mb-4">
+                    <label for="user_name" class="block mb-2">Qual é o seu nome?</label>
+                    <input type="text" id="user_name" name="user_name" class="w-full p-3 rounded form-input" placeholder="Digite seu nome aqui" required>
+                </div>
+                <button type="button" onclick="nextStep(2)" class="w-full mt-6 py-3 px-4 rounded btn-glow font-bold">Próximo</button>
+            </div>
+
+            <!-- Step 2: Biggest Time Consumers -->
+            <div id="step-2" class="step">
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 2 de 5</h2>
+                <p class="text-lg mb-4 text-gray-300">Fora o atendimento clínico, qual destas áreas mais consome o tempo da sua equipe no dia a dia? (Marque todas que aplicam)</p>
+                <div class="space-y-3">
+                    <div><input type="checkbox" id="q1_agendamento" name="time_consumers" value="Gestão de agendamentos, confirmações e remarcações" class="hidden form-checkbox"><label for="q1_agendamento" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Gestão de agendamentos, confirmações e remarcações.</label></div>
+                    <div><input type="checkbox" id="q1_documentacao" name="time_consumers" value="Documentação: preenchimento de prontuários e planos de tratamento" class="hidden form-checkbox"><label for="q1_documentacao" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Documentação: prontuários, evoluções e planos de tratamento.</label></div>
+                    <div><input type="checkbox" id="q1_faturamento" name="time_consumers" value="Faturamento: lidar com guias de convênios, glosas e cobranças" class="hidden form-checkbox"><label for="q1_faturamento" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Faturamento: guias de convênios, glosas e cobranças.</label></div>
+                    <div><input type="checkbox" id="q1_comunicacao" name="time_consumers" value="Comunicação geral com pacientes (dúvidas, pós-operatório, etc.)" class="hidden form-checkbox"><label for="q1_comunicacao" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Comunicação geral com pacientes (dúvidas, pós-operatório).</label></div>
+                    <div><input type="checkbox" id="q1_gestao" name="time_consumers" value="Gestão de materiais, estoque e contato com fornecedores" class="hidden form-checkbox"><label for="q1_gestao" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Gestão de materiais, estoque e fornecedores.</label></div>
+                    <div>
+                        <input type="checkbox" id="q1_outro_checkbox" name="time_consumers_other_checkbox" class="hidden form-checkbox" onclick="toggleOtherField('q1_outro_checkbox', 'q1_outro_text_container')">
+                        <label for="q1_outro_checkbox" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Outro</label>
+                    </div>
+                    <div id="q1_outro_text_container" class="hidden pt-2">
+                        <input type="text" id="q1_outro_text" name="time_consumers_other_text" class="w-full p-3 rounded form-input" placeholder="Por favor, especifique">
+                    </div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep(1)" class="py-3 px-6 rounded btn-secondary font-bold">Anterior</button>
+                    <button type="button" onclick="nextStep(3)" class="py-3 px-6 rounded btn-glow font-bold">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Frustration Level -->
+            <div id="step-3" class="step">
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 3 de 5</h2>
+                <p class="text-lg mb-4 text-gray-300">Em uma escala de 1 a 5, o quão frustrante é a carga de trabalho administrativo na sua clínica atualmente?</p>
+                <div class="grid grid-cols-5 gap-3 text-center">
+                    <div><input type="radio" id="q2_1" name="frustration_level" value="1 (Nada frustrante)" class="hidden form-radio" required><label for="q2_1" class="form-radio-label block w-full p-3 rounded cursor-pointer">1<span class="block text-xs text-gray-400">Nada</span></label></div>
+                    <div><input type="radio" id="q2_2" name="frustration_level" value="2 (Pouco frustrante)" class="hidden form-radio"><label for="q2_2" class="form-radio-label block w-full p-3 rounded cursor-pointer">2<span class="block text-xs text-gray-400">Pouco</span></label></div>
+                    <div><input type="radio" id="q2_3" name="frustration_level" value="3 (Neutro)" class="hidden form-radio"><label for="q2_3" class="form-radio-label block w-full p-3 rounded cursor-pointer">3<span class="block text-xs text-gray-400">Neutro</span></label></div>
+                    <div><input type="radio" id="q2_4" name="frustration_level" value="4 (Frustrante)" class="hidden form-radio"><label for="q2_4" class="form-radio-label block w-full p-3 rounded cursor-pointer">4<span class="block text-xs text-gray-400">Frustrante</span></label></div>
+                    <div><input type="radio" id="q2_5" name="frustration_level" value="5 (Extremamente frustrante)" class="hidden form-radio"><label for="q2_5" class="form-radio-label block w-full p-3 rounded cursor-pointer">5<span class="block text-xs text-gray-400">Extremo</span></label></div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep(2)" class="py-3 px-6 rounded btn-secondary font-bold">Anterior</button>
+                    <button type="button" onclick="nextStep(4)" class="py-3 px-6 rounded btn-glow font-bold">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Biggest Impact -->
+            <div id="step-4" class="step">
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 4 de 5</h2>
+                <p class="text-lg mb-4 text-gray-300">Imagine um "assistente virtual inteligente". Qual destas funcionalidades traria o MAIOR impacto positivo imediato? (Escolha apenas UMA)</p>
+                 <div class="space-y-3">
+                    <div><input type="radio" id="q3_1" name="biggest_impact" value="Gerar anotações clínicas automaticamente a partir da conversa com o paciente" class="hidden form-radio" required onclick="hideOtherField('q3_outro_text_container')"><label for="q3_1" class="form-radio-label block w-full p-3 rounded cursor-pointer">Gerar anotações clínicas automaticamente por voz.</label></div>
+                    <div><input type="radio" id="q3_2" name="biggest_impact" value="Preencher e enviar faturamento de convênios sem erros, evitando glosas" class="hidden form-radio" onclick="hideOtherField('q3_outro_text_container')"><label for="q3_2" class="form-radio-label block w-full p-3 rounded cursor-pointer">Preencher e enviar faturamento de convênios sem erros.</label></div>
+                    <div><input type="radio" id="q3_3" name="biggest_impact" value="Gerenciar a agenda de forma autônoma, contatando pacientes para preencher horários vagos" class="hidden form-radio" onclick="hideOtherField('q3_outro_text_container')"><label for="q3_3" class="form-radio-label block w-full p-3 rounded cursor-pointer">Gerenciar a agenda e preencher horários vagos.</label></div>
+                    <div><input type="radio" id="q3_4" name="biggest_impact" value="Interagir com pacientes via WhatsApp para agendamentos e dúvidas simples" class="hidden form-radio" onclick="hideOtherField('q3_outro_text_container')"><label for="q3_4" class="form-radio-label block w-full p-3 rounded cursor-pointer">Interagir com pacientes via WhatsApp para agendamentos.</label></div>
+                    <div>
+                        <input type="radio" id="q3_outro_radio" name="biggest_impact" value="Outro" class="hidden form-radio" onclick="toggleOtherField('q3_outro_radio', 'q3_outro_text_container')">
+                        <label for="q3_outro_radio" class="form-radio-label block w-full p-3 rounded cursor-pointer">Outro</label>
+                    </div>
+                    <div id="q3_outro_text_container" class="hidden pt-2">
+                        <input type="text" id="q3_outro_text" name="biggest_impact_other_text" class="w-full p-3 rounded form-input" placeholder="Por favor, especifique qual seria o maior impacto">
+                    </div>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep(3)" class="py-3 px-6 rounded btn-secondary font-bold">Anterior</button>
+                    <button type="button" onclick="nextStep(5)" class="py-3 px-6 rounded btn-glow font-bold">Próximo</button>
+                </div>
+            </div>
+            
+            <!-- Step 5: Open Question -->
+            <div id="step-5" class="step">
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 5 de 5</h2>
+                <p class="text-lg mb-4 text-gray-300">Qual é a ÚNICA tarefa que, se fosse automatizada hoje, melhoraria seu equilíbrio entre vida profissional e pessoal?</p>
+                <div class="mb-4">
+                    <textarea id="q4_open" name="work_life_balance_task" rows="4" class="w-full p-3 rounded form-textarea" placeholder="Ex: 'Não ter que me preocupar com a confirmação de todos os pacientes do dia seguinte.'" required></textarea>
+                </div>
+                <div class="flex justify-between mt-6">
+                    <button type="button" onclick="prevStep(4)" class="py-3 px-6 rounded btn-secondary font-bold">Anterior</button>
+                    <button type="submit" class="py-3 px-6 rounded btn-glow font-bold">Gerar Meu Plano de Ação</button>
+                </div>
+            </div>
+        </form>
+        <img src="assets/logo.png" alt="Logo da Clínica" class="mx-auto h-24 w-auto mb-4">
+        <!-- Loading State -->
+        <div id="loading" class="text-center py-8" style="display: none;">
+            <div id="loading-spinner" class="h-12 w-12 rounded-full mx-auto mb-4"></div>
+            <p id="loading-text" class="text-lg text-[#64FFDA]">Analisando suas respostas e construindo seu plano personalizado...</p>
+        </div>
+
+        <!-- Result Display -->
+        <div id="result-container" class="mt-8" style="display: none;">
+            <h2 class="text-3xl font-bold text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-[#E6F1FF] to-[#64FFDA]">Seu Plano de Automação Personalizado</h2>
+            <div id="playbook-content" class="max-w-none bg-[#0A192F] p-6 rounded-lg">
+                <!-- AI Generated content will go here -->
+            </div>
+            <div class="text-center mt-8 space-x-4">
+                <button onclick="downloadPDF()" class="py-3 px-6 rounded btn-glow font-bold">Baixar em PDF</button>
+                <button onclick="startOver()" class="py-3 px-6 rounded btn-secondary font-bold">Começar de Novo</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- APPLICATION STATE ---
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        // --- UI NAVIGATION ---
+        function showStep(stepNumber) {
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            const stepToShow = document.getElementById(`step-${stepNumber}`);
+            if (stepToShow) {
+                stepToShow.classList.add('active');
+            }
+        }
+
+        function validateStep(stepNumber) {
+            const stepDiv = document.getElementById(`step-${stepNumber}`);
+            const inputs = stepDiv.querySelectorAll('[required]');
+            let isValid = true;
+            inputs.forEach(input => {
+                if (input.type === 'radio' || input.type === 'checkbox') {
+                    const groupName = input.name;
+                    if (!document.querySelector(`input[name="${groupName}"]:checked`)) {
+                        isValid = false;
+                    }
+                } else if (!input.value.trim()) {
+                    isValid = false;
+                }
+            });
+            
+            if (stepNumber === 2) {
+                 if (!document.querySelector('input[name="time_consumers"]:checked') && !document.getElementById('q1_outro_checkbox').checked) {
+                    isValid = false;
+                 }
+                 if (document.getElementById('q1_outro_checkbox').checked && !document.getElementById('q1_outro_text').value.trim()) {
+                    isValid = false;
+                 }
+            }
+             if (stepNumber === 4) {
+                if (document.getElementById('q3_outro_radio').checked && !document.getElementById('q3_outro_text').value.trim()) {
+                    isValid = false;
+                 }
+            }
+
+
+            if (!isValid) {
+                console.log(`Validation failed for step ${stepNumber}`);
+            }
+            return isValid;
+        }
+
+        function nextStep(stepNumber) {
+            if (validateStep(currentStep) && currentStep < totalSteps) {
+                currentStep = stepNumber;
+                showStep(currentStep);
+            } else if (!validateStep(currentStep)) {
+                alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+            }
+        }
+
+        function prevStep(stepNumber) {
+            if (currentStep > 1) {
+                currentStep = stepNumber;
+                showStep(currentStep);
+            }
+        }
+        
+        function startOver() {
+            currentStep = 1;
+            document.getElementById('automation-form').reset();
+            document.getElementById('result-container').style.display = 'none';
+            document.getElementById('automation-form').style.display = 'block';
+            document.getElementById('header').style.display = 'block';
+            document.getElementById('q1_outro_text_container').classList.add('hidden');
+            document.getElementById('q3_outro_text_container').classList.add('hidden');
+            showStep(1);
+        }
+
+        function toggleOtherField(checkboxId, containerId) {
+            const checkbox = document.getElementById(checkboxId);
+            const container = document.getElementById(containerId);
+            if (checkbox.checked) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function hideOtherField(containerId) {
+            document.getElementById(containerId).classList.add('hidden');
+        }
+
+        function markdownToHtml(markdown) {
+            const lines = markdown.split('\n');
+            let html = '';
+            let inList = false;
+
+            for (const line of lines) {
+                if (line.startsWith('### ')) {
+                    if (inList) { html += '</ul>\n'; inList = false; }
+                    html += `<h3>${line.substring(4)}</h3>\n`;
+                } else if (line.startsWith('#### ')) {
+                    if (inList) { html += '</ul>\n'; inList = false; }
+                    html += `<h4>${line.substring(5)}</h4>\n`;
+                }
+                else if (line.startsWith('* ')) {
+                    if (!inList) { html += '<ul>\n'; inList = true; }
+                    let listItem = line.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    html += `<li>${listItem}</li>\n`;
+                }
+                else if (line.trim() === '---') {
+                    if (inList) { html += '</ul>\n'; inList = false; }
+                    html += '<hr>\n';
+                }
+                else if (line.trim() !== '') {
+                    if (inList) { html += '</ul>\n'; inList = false; }
+                    let paragraph = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    html += `<p>${paragraph}</p>\n`;
+                }
+                else {
+                    if (inList) { html += '</ul>\n'; inList = false; }
+                }
+            }
+            if (inList) {
+                html += '</ul>\n';
+            }
+            return html;
+        }
+
+        document.getElementById('automation-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            if (!validateStep(currentStep)) {
+                 alert('Por favor, preencha todos os campos obrigatórios antes de continuar.');
+                return;
+            }
+            
+            document.getElementById('automation-form').style.display = 'none';
+            document.getElementById('header').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            const formData = new FormData(event.target);
+            
+            const timeConsumersCheckboxes = formData.getAll('time_consumers');
+            if (document.getElementById('q1_outro_checkbox').checked) {
+                const otherText = document.getElementById('q1_outro_text').value;
+                timeConsumersCheckboxes.push(otherText);
+            }
+
+            let biggestImpactValue = formData.get('biggest_impact');
+            if (biggestImpactValue === 'Outro') {
+                biggestImpactValue = document.getElementById('q3_outro_text').value;
+            }
+
+            const formProps = {
+                user_name: formData.get('user_name'),
+                time_consumers: timeConsumersCheckboxes.join(', ') || 'Nenhum selecionado',
+                frustration_level: formData.get('frustration_level'),
+                biggest_impact: biggestImpactValue,
+                work_life_balance_task: formData.get('work_life_balance_task')
+            };
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formProps),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Ocorreu um erro desconhecido no servidor.');
+                }
+
+                const result = await response.json();
+                const playbookText = result.playbook;
+                
+                const htmlContent = markdownToHtml(playbookText);
+
+                document.getElementById('playbook-content').innerHTML = htmlContent;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('result-container').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocorreu um erro ao gerar seu plano: ' + error.message);
+                startOver();
+            }
+        });
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'p',
+                unit: 'pt',
+                format: 'a4'
+            });
+
+            const page = {
+                width: doc.internal.pageSize.getWidth(),
+                height: doc.internal.pageSize.getHeight(),
+                margin: 40
+            };
+            page.contentWidth = page.width - (page.margin * 2);
+            let cursorY = page.margin;
+
+            const addNewPage = () => {
+                doc.addPage();
+                doc.setFillColor('#0A192F');
+                doc.rect(0, 0, page.width, page.height, 'F');
+                cursorY = page.margin;
+            };
+
+            const checkPageBreak = (elementHeight) => {
+                if (cursorY + elementHeight > page.height - page.margin) {
+                    addNewPage();
+                }
+            };
+
+            const styles = {
+                title: { size: 22, color: '#64FFDA', font: 'helvetica', style: 'bold' },
+                h3: { size: 16, color: '#64FFDA', font: 'helvetica', style: 'bold' },
+                h4: { size: 14, color: '#CCD6F6', font: 'helvetica', style: 'bold' },
+                p: { size: 11, color: '#a8b2d1', font: 'helvetica', style: 'normal' },
+                li: { size: 11, color: '#a8b2d1', font: 'helvetica', style: 'normal' }
+            };
+            const spacing = {
+                h3_top: 25, h3_bottom: 15,
+                h4_top: 20, h4_bottom: 8,
+                p_bottom: 12,
+                li_bottom: 8,
+                line_height_multiplier: 1.4
+            };
+
+            doc.setFillColor('#0A192F');
+            doc.rect(0, 0, page.width, page.height, 'F');
+            
+            cursorY += 20; 
+            doc.setFont(styles.title.font, styles.title.style).setFontSize(styles.title.size).setTextColor(styles.title.color);
+            doc.text("Seu Plano de Automação Personalizado", page.width / 2, cursorY, { align: 'center' });
+            cursorY += 20;
+
+            const source = document.getElementById('playbook-content');
+            const elements = source.childNodes;
+
+            elements.forEach(el => {
+                const tagName = el.tagName;
+                if (!tagName) return;
+                
+                let text = el.innerText || '';
+
+                switch (tagName) {
+                    case 'H3':
+                        checkPageBreak(spacing.h3_top + styles.h3.size + spacing.h3_bottom);
+                        cursorY += spacing.h3_top;
+                        doc.setFont(styles.h3.font, styles.h3.style).setFontSize(styles.h3.size).setTextColor(styles.h3.color);
+                        const h3Lines = doc.splitTextToSize(text, page.contentWidth);
+                        doc.text(h3Lines, page.width / 2, cursorY, { align: 'center' });
+                        cursorY += (h3Lines.length * styles.h3.size) + spacing.h3_bottom;
+                        break;
+
+                    case 'H4':
+                        checkPageBreak(spacing.h4_top + styles.h4.size);
+                        cursorY += spacing.h4_top;
+                        doc.setFont(styles.h4.font, styles.h4.style).setFontSize(styles.h4.size).setTextColor(styles.h4.color);
+                        const h4Lines = doc.splitTextToSize(text, page.contentWidth);
+                        doc.text(h4Lines, page.margin, cursorY);
+                        cursorY += (h4Lines.length * styles.h4.size) + spacing.h4_bottom;
+                        break;
+
+                    case 'P':
+                        doc.setFont(styles.p.font, styles.p.style).setFontSize(styles.p.size).setTextColor(styles.p.color);
+                        const pLines = doc.splitTextToSize(text, page.contentWidth);
+                        const pHeight = pLines.length * styles.p.size * spacing.line_height_multiplier;
+                        checkPageBreak(pHeight + spacing.p_bottom);
+                        doc.text(pLines, page.margin, cursorY, { lineHeightFactor: spacing.line_height_multiplier });
+                        cursorY += pHeight + spacing.p_bottom;
+                        break;
+                    
+                    case 'UL':
+                        const listItems = el.getElementsByTagName('li');
+                        Array.from(listItems).forEach(li => {
+                            doc.setFont(styles.li.font, styles.li.style).setFontSize(styles.li.size).setTextColor(styles.li.color);
+                            const liText = li.innerText || '';
+                            const liLines = doc.splitTextToSize(liText, page.contentWidth - 20);
+                            const liHeight = liLines.length * styles.li.size * spacing.line_height_multiplier;
+                            checkPageBreak(liHeight + spacing.li_bottom);
+                            
+                            doc.text('-', page.margin, cursorY);
+                            doc.text(liLines, page.margin + 20, cursorY, { lineHeightFactor: spacing.line_height_multiplier });
+                            cursorY += liHeight + spacing.li_bottom;
+                        });
+                        break;
+
+                    case 'HR':
+                        break;
+                }
+            });
+
+            doc.save('Plano_de_Automacao_Clinica.pdf');
+        }
+        
+        showStep(currentStep);
+    </script>
+</body>
+</html>
