@@ -148,7 +148,7 @@
         <form id="automation-form">
             <!-- Step 1: Your Name -->
             <div id="step-1" class="step active">
-                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 1 de 5</h2>
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Pergunta 1 de 5</h2>
                 <p class="text-lg mb-4 text-gray-300">Para começar, por favor, nos diga o seu nome.</p>
                 <div class="mb-4">
                     <label for="user_name" class="block mb-2">Qual é o seu nome?</label>
@@ -159,7 +159,7 @@
 
             <!-- Step 2: Biggest Time Consumers -->
             <div id="step-2" class="step">
-                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 2 de 5</h2>
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Pergunta 2 de 5</h2>
                 <p class="text-lg mb-4 text-gray-300">Fora o atendimento clínico, qual destas áreas mais consome o tempo da sua equipe no dia a dia? (Marque todas que aplicam)</p>
                 <div class="space-y-3">
                     <div><input type="checkbox" id="q1_agendamento" name="time_consumers" value="Gestão de agendamentos, confirmações e remarcações" class="hidden form-checkbox"><label for="q1_agendamento" class="form-checkbox-label block w-full p-3 rounded cursor-pointer">Gestão de agendamentos, confirmações e remarcações.</label></div>
@@ -183,7 +183,7 @@
 
             <!-- Step 3: Frustration Level -->
             <div id="step-3" class="step">
-                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 3 de 5</h2>
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Pergunta 3 de 5</h2>
                 <p class="text-lg mb-4 text-gray-300">Em uma escala de 1 a 5, o quão frustrante é a carga de trabalho administrativo na sua clínica atualmente?</p>
                 <div class="grid grid-cols-5 gap-3 text-center">
                     <div><input type="radio" id="q2_1" name="frustration_level" value="1 (Nada frustrante)" class="hidden form-radio" required><label for="q2_1" class="form-radio-label block w-full p-3 rounded cursor-pointer">1<span class="block text-xs text-gray-400">Nada</span></label></div>
@@ -200,7 +200,7 @@
 
             <!-- Step 4: Biggest Impact -->
             <div id="step-4" class="step">
-                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 4 de 5</h2>
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Pergunta 4 de 5</h2>
                 <p class="text-lg mb-4 text-gray-300">Imagine um "assistente virtual inteligente". Qual destas funcionalidades traria o MAIOR impacto positivo imediato? (Escolha apenas UMA)</p>
                  <div class="space-y-3">
                     <div><input type="radio" id="q3_1" name="biggest_impact" value="Gerar anotações clínicas automaticamente a partir da conversa com o paciente" class="hidden form-radio" required onclick="hideOtherField('q3_outro_text_container')"><label for="q3_1" class="form-radio-label block w-full p-3 rounded cursor-pointer">Gerar anotações clínicas automaticamente por voz.</label></div>
@@ -223,7 +223,7 @@
             
             <!-- Step 5: Open Question -->
             <div id="step-5" class="step">
-                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Passo 5 de 5</h2>
+                <h2 class="text-2xl font-bold mb-1 text-[#64FFDA]">Pergunta 5 de 5</h2>
                 <p class="text-lg mb-4 text-gray-300">Qual é a ÚNICA tarefa que, se fosse automatizada hoje, melhoraria seu equilíbrio entre vida profissional e pessoal?</p>
                 <div class="mb-4">
                     <textarea id="q4_open" name="work_life_balance_task" rows="4" class="w-full p-3 rounded form-textarea" placeholder="Ex: 'Não ter que me preocupar com a confirmação de todos os pacientes do dia seguinte.'" required></textarea>
