@@ -67,8 +67,8 @@ app.post('/api/generate', async (req, res) => {
             - **Tarefa que, se automatizada, melhoraria o equilíbrio vida/trabalho:** ${formData.work_life_balance_task}
 
             **Instruções para o Plano de Ação:**
-            1.  **Diagnóstico Rápido:** Faça um diagnóstico rápido do problema do usuário, com base nas respostas anteriores e resuma as possíveis soluções combinando as respostas do usuário com a base de conhecimento.
-            2.  **Seu Plano de Ação Prático:** Apresente um plano de ação prático e detalhado, dividido em etapas claras e fáceis de seguir. O plano deve ser personalizado para o problemas do usuários, com base nas respostas anteriores e na base de conhecimento. Divida o plano em 2 **Fases** e com **Prazo** sugerido, partindo das soluções mais simples até as mais complexas e apresentando o **Benefício** de cada etapa.
+            1.  **Diagnóstico Rápido:** Faça um diagnóstico rápido do problema do usuário com no máximo 50 palavras, com base nas respostas anteriores e resuma as possíveis soluções combinando as respostas do usuário com a base de conhecimento.
+            2.  **Seu Plano de Ação Prático:** Apresente um plano de ação prático e detalhado, dividido em etapas claras e fáceis de seguir. O plano deve ser personalizado para o problemas do usuários, com base nas respostas anteriores e na base de conhecimento. Faça uma lista de soluções com **Prazos** sugeridos para implementação de cada uma, partindo das soluções mais simples até as mais complexas e apresentando o **Benefício** de cada uma. Não inclua sugestão de ferramentas e foque apenas nas possiveis soluções e ações que o usuário pode tomar para começar a implementá-las.
             
                         **Instruções Estritas de Formatação:**
             1.  **Títulos de Seção Principal:** Use SEMPRE '### ' (três hashtags e um espaço). Exemplo: '### Fase 1: Otimizações'.
