@@ -35,6 +35,11 @@ app.use(express.static(path.join(__dirname)));
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
+// Nova rota para servir a página de Política de Privacidade
+app.get('/politica-de-privacidade.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'politica-de-privacidade.html'));
+});
+
 
 // Define o endpoint da API para gerar o plano
 app.post('/api/generate', async (req, res) => {

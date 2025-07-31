@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidade - Gerador de Plano de Automação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A192F;
+            color: #E6F1FF;
+        }
+
+        .content-container {
+            background-color: #0E2A47;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        h1, h2 {
+            color: #64FFDA;
+        }
+
+        a {
+            color: #64FFDA;
+            text-decoration: underline;
+        }
+
+        strong {
+            color: #CCD6F6;
+            font-weight: 600;
+        }
+
+        p {
+            color: #a8b2d1;
+            line-height: 1.7;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #64FFDA;
+            border: 1px solid #64FFDA;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-3xl mx-auto content-container px-8 pt-8 pb-4 rounded-lg">
+        <h1 class="text-3xl font-bold mb-6 text-center">Política de Privacidade</h1>
+
+        <p class="mb-4"><strong>Última atualização:</strong> 31 de julho de 2025</p>
+
+        <p class="mb-6">Esta Política de Privacidade descreve como as suas informações são coletadas, usadas e armazenadas quando você utiliza o nosso Gerador de Plano de Automação para Clínicas (a "Ferramenta"). Esta política foi elaborada em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD), Lei nº 13.709/2018.</p>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">1. Quais Dados Coletamos?</h2>
+        <p class="mb-4">Ao utilizar nossa Ferramenta, coletamos as seguintes informações que você nos fornece voluntariamente através do formulário:</p>
+        <ul class="list-disc list-inside mb-4 pl-4 text-gray-400">
+            <li><strong>Nome:</strong> Para personalizar a sua experiência.</li>
+            <li><strong>Respostas do Formulário:</strong> Suas respostas sobre as dores, desafios e preferências de automação em sua clínica.</li>
+        </ul>
+        <p>Não coletamos dados sensíveis, como informações de saúde, financeiras ou de pacientes.</p>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">2. Como Usamos Seus Dados?</h2>
+        <p class="mb-4">As informações que coletamos são utilizadas com as seguintes finalidades:</p>
+        <ul class="list-disc list-inside mb-4 pl-4 text-gray-400">
+            <li><strong>Geração do Plano de Automação:</strong> Suas respostas são enviadas à API da Google (Gemini) juntamente com nossa base de conhecimento para gerar o guia personalizado para você.</li>
+            <li><strong>Armazenamento e Análise:</strong> Suas respostas e o guia gerado são armazenados de forma segura em nosso banco de dados no Supabase.</li>
+            <li><strong>Melhoria da Ferramenta:</strong> Analisamos os dados de forma anônima e agregada para entender os desafios mais comuns enfrentados pelas clínicas e melhorar a qualidade dos guias gerados no futuro.</li>
+        </ul>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">3. Armazenamento e Segurança dos Dados</h2>
+        <p class="mb-4">Seus dados são armazenados na plataforma Supabase, que emprega as melhores práticas de segurança do mercado para proteger suas informações contra acesso não autorizado, alteração ou destruição.</p>
+        <p>Utilizamos a chave de acesso `service_role` do Supabase exclusivamente em nosso ambiente de servidor (backend), garantindo que ela nunca seja exposta no navegador do usuário, o que representa uma camada crítica de segurança.</p>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">4. Compartilhamento de Dados</h2>
+        <p class="mb-4">Nós não vendemos, alugamos ou compartilhamos suas informações pessoais com terceiros para fins de marketing.</p>
+        <p>O único compartilhamento ocorre com a API da Google (Gemini) no momento da geração do seu plano. A Google possui suas próprias políticas de privacidade robustas, e as informações são enviadas apenas para a finalidade descrita nesta política.</p>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">5. Seus Direitos como Titular dos Dados</h2>
+        <p class="mb-4">De acordo com a LGPD, você tem o direito de:</p>
+        <ul class="list-disc list-inside mb-4 pl-4 text-gray-400">
+            <li>Confirmar a existência de tratamento dos seus dados.</li>
+            <li>Acessar seus dados.</li>
+            <li>Corrigir dados incompletos, inexatos ou desatualizados.</li>
+            <li>Solicitar a anonimização, bloqueio ou eliminação de dados desnecessários ou excessivos.</li>
+            <li>Revogar o seu consentimento a qualquer momento.</li>
+        </ul>
+        <p>Para exercer seus direitos, por favor, entre em contato conosco através do e-mail: italo.murilo12@gmail.com.</p>
+
+        <h2 class="text-2xl font-bold mt-8 mb-4">6. Consentimento</h2>
+        <p class="mb-6">Ao marcar a caixa de seleção no final do formulário e clicar em "Gerar Meu Plano de Ação", você declara que leu, entendeu e concorda com os termos desta Política de Privacidade, consentindo de forma livre e expressa com o tratamento dos seus dados para as finalidades aqui descritas.</p>
+
+        <div class="text-center mt-8">
+            <a href="index.html" class="py-2 px-6 rounded btn-secondary font-bold">Voltar para o Formulário</a>
+        </div>
+
+        <!-- Logo Image -->
+        <img src="assets/logo.png" alt="Logo da Clínica" class="mx-auto h-20 w-auto mt-8 -mb-4">
+
+        <!-- Footer with Copyright -->
+        <footer class="mt-1 text-center">
+            <p id="copyright-notice" class="text-xs text-gray-500"></p>
+        </footer>
+    </div>
+
+    <script>
+        // Set copyright year dynamically
+        document.getElementById('copyright-notice').innerText = `© ${new Date().getFullYear()} MKNAI. Todos os direitos reservados.`;
+    </script>
+
+</body>
+</html>
