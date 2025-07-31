@@ -268,7 +268,7 @@
         </div>
 
         <!-- Logo Image -->
-        <img src="assets/logo.png" alt="Logo da Clínica" class="mx-auto h-20 w-auto mt-8 -mb-4">
+        <img src="assets/logo.png" alt="Logo da Clínica" id="pdf-logo" class="mx-auto h-20 w-auto mt-8 -mb-4">
 
         <!-- Footer with Copyright -->
         <footer class="mt-1 text-center">
@@ -468,7 +468,7 @@
             }
         });
 
-        function downloadPDF() {
+        async function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({
                 orientation: 'p',
@@ -476,15 +476,49 @@
                 format: 'a4'
             });
 
+            // --- LOAD LOGO IMAGE ---
+            let logoDataUri = '';
+            try {
+                const response = await fetch('assets/logo.png');
+                const blob = await response.blob();
+                logoDataUri = await new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(blob);
+                });
+            } catch (error) {
+                console.error("Could not load logo for PDF:", error);
+            }
+
+            // --- CONFIGURATION ---
             const page = {
                 width: doc.internal.pageSize.getWidth(),
                 height: doc.internal.pageSize.getHeight(),
-                margin: 40
+                margin: 40,
+                footerHeight: 50
             };
             page.contentWidth = page.width - (page.margin * 2);
             let cursorY = page.margin;
 
+            // --- HELPER FUNCTIONS ---
+            const drawFooter = (docInstance) => {
+                const pageNumber = docInstance.internal.getNumberOfPages();
+                docInstance.setFontSize(8).setTextColor('#8892b0');
+                
+                // Add copyright
+                const copyrightText = `© ${new Date().getFullYear()} MKNAI. Todos os direitos reservados.`;
+                docInstance.text(copyrightText, page.margin, page.height - (page.margin / 2));
+
+                // Add logo
+                if (logoDataUri) {
+                    const logoWidth = 40;
+                    const logoHeight = 40;
+                    docInstance.addImage(logoDataUri, 'PNG', page.width - page.margin - logoWidth, page.height - page.margin - 5, logoWidth, logoHeight);
+                }
+            };
+            
             const addNewPage = () => {
+                drawFooter(doc);
                 doc.addPage();
                 doc.setFillColor('#0A192F');
                 doc.rect(0, 0, page.width, page.height, 'F');
@@ -492,11 +526,12 @@
             };
 
             const checkPageBreak = (elementHeight) => {
-                if (cursorY + elementHeight > page.height - page.margin) {
+                if (cursorY + elementHeight > page.height - page.margin - page.footerHeight) {
                     addNewPage();
                 }
             };
 
+            // --- PDF STYLING ---
             const styles = {
                 title: { size: 22, color: '#64FFDA', font: 'helvetica', style: 'bold' },
                 h3: { size: 16, color: '#64FFDA', font: 'helvetica', style: 'bold' },
@@ -512,6 +547,7 @@
                 line_height_multiplier: 1.4
             };
 
+            // --- START PDF GENERATION ---
             doc.setFillColor('#0A192F');
             doc.rect(0, 0, page.width, page.height, 'F');
             
@@ -577,12 +613,12 @@
                 }
             });
 
+            drawFooter(doc); // Draw footer on the last page
             doc.save('Plano_de_Automacao_Clinica.pdf');
         }
         
         // --- INITIALIZATION ---
         showStep(currentStep);
-        // Set copyright year dynamically
         document.getElementById('copyright-notice').innerText = `© ${new Date().getFullYear()} MKNAI. Todos os direitos reservados.`;
     </script>
 </body>
